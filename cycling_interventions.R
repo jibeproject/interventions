@@ -86,7 +86,7 @@ for (i in 1:20){
 #get intersections that bridge GOOD and BAD infra
 bound.nodes <- vertex_attr(g1)$nodeID[(vertex_attr(g1)$nodeID %in% vertex_attr(g2)$nodeID)==TRUE]
 
-#get the boundary nodes of the largest 20 sub-graphs
+#get the boundary nodes of the largest 20 sub-graphs with quality infra
 boundlist <- NULL
 
 for (j in 1:20){
@@ -111,7 +111,7 @@ rm(list = ls()[grep("bound", ls())])
 #########################
 #check PageRank cut-off values distribution
 summary(V(network)$pg_rnk)
-#greater cut-off should be selected for less node pairs and reduced run time: e.g. top 0.1% of nodes with highest PageRanking score
+#greater cut-off should be selected to create less node pairs and reduced run time: e.g. top 0.1% of nodes with highest PageRanking score
 pg_rnk <- min(tail(sort(V(network)$pg_rnk), length(V(network))*0.001))
 
 rm(i,j, nodeID_clust1, nodeID_clust2, pg_rnk_clust1, pg_rnk_clust2, dist, df, euc)
@@ -151,6 +151,6 @@ interventions <- NULL
 #parallelize
 for (i in 1:nrow(euc)){                                                   #add least cost path constraint of highest cycling demand and highest AADT
   paths_euc[[i]] <- shortest_paths(network, euc[i,1], euc[i,3], weights =(1/E(network)$govnearmkt_slc_majority + 1/E(network)$aadt), output = "both")
-  inter_euc[[i]] <- beenet[beenet$edgeID %in% E(network)$edgeID[which(E(network) %in% unlist(paths_euc[[i]]$epath))],]
+  inter_euc[[i]] <- pct[pct$edgeID %in% E(network)$edgeID[which(E(network) %in% unlist(paths_euc[[i]]$epath))],]
   interventions <- rbind(interventions, inter_euc[[i]]) #dplyr::bind_rows/plyr::rbind.fill
 }
