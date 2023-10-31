@@ -42,12 +42,12 @@ network$aadb_b <- as.numeric(network$aadb_b)
 network$aadb_f[is.na(network$aadb_f)] <- 0.00001
 network$aadb_b[is.na(network$aadb_b)] <- 0.00001
 
-#give NA values lowest demand weights; replace NAs and 0s with 0.00001s (we invert these values because the algorithm for the shortest path always chooses the least cost path among two vertices, and we want the least cost path to be the one with the highest cycling demand)
+#give NA values lowest demand weights; replace NAs and 0s with 0.00001s (we later invert these values because the algorithm for the shortest path always chooses the least cost path among two vertices, and we want the least cost path to be the one with the highest cycling demand)
 network$govnearmkt_slc_majority[is.na(network$govnearmkt_slc_majority)] <- 0.00001
 #convert NaN values to infinite
 network$bikeJibeMarginalDisutility[is.na(network$bikeJibeMarginalDisutility)] <- Inf
 
-#invert weights so highestgest to be more close to 0 and lowest to be closer to 1 (we invert these values because the algorithm for the shortest path always chooses the least cost path among two vertices, and we want the least cost path to be the one with the highest cycling demand)
+#invert weights so highestgest to be more close to 0 and lowest to be closer to 1 (we later invert these values because the algorithm for the shortest path always chooses the least cost path among two vertices, and we want the least cost path to be the one with the highest cycling demand)
 network$aadb_f <- 1/network$aadb_f
 network$aadb_b <- 1/network$aadb_b
 
