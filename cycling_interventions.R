@@ -170,4 +170,4 @@ interventions <- interventions[(interventions$edgeID %in% E(g1)$edgeID),] #keep 
 network$cyclesm <- ifelse((network$edgeID %in% interventions$edgeID)==TRUE, as.character("protected"), network_copy$cyclesm)
 
 #write network with new interventions
-sf::write_sf(network,"D:/JIBE/02_DataOutput/network/gm/network_interventions.gpkg")
+sf::write_sf(network,"./network_interventions.gpkg")
