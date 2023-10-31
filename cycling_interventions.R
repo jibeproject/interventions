@@ -164,7 +164,7 @@ rm(list=setdiff(ls()))
 network <- st_read("D:/JIBE/02_DataOutput/network/gm/network_v3.13.gpkg") #file found in Teams WP2>Data_WP2>Processed_Data>Greater Manchester>GM_Network
 
 interventions <- interventions[!duplicated(interventions$edgeID),]
-interventions <- interventions[(interventions$edgeID %in% E(g1)$edgeID),] #keep only edgeIDs found in g1 (BAD cycling infra)
+interventions <- interventions[(interventions$edgeID %in% E(g1)$edgeID),] #keep only edgeIDs found in g1 (graph with BAD cycling infra)
 
 #add PROTECTED cycling lanes to edges without cycling lanes
 network$cyclesm <- ifelse((network$edgeID %in% interventions$edgeID)==TRUE, as.character("protected"), network_copy$cyclesm)
