@@ -148,9 +148,26 @@ paths_euc <- NULL
 inter_euc <- NULL
 interventions <- NULL
 
-#parallelize
+#parallelize in future work
 for (i in 1:nrow(euc)){                                                   #add least cost path constraint of highest cycling demand and highest AADT
   paths_euc[[i]] <- shortest_paths(network, euc[i,1], euc[i,3], weights =(1/E(network)$govnearmkt_slc_majority + 1/E(network)$aadt), output = "both")
   inter_euc[[i]] <- pct[pct$edgeID %in% E(network)$edgeID[which(E(network) %in% unlist(paths_euc[[i]]$epath))],]
   interventions <- rbind(interventions, inter_euc[[i]]) #dplyr::bind_rows/plyr::rbind.fill
 }
+
+rm(list=setdiff(ls(), c("interventions", "g1"))) #clear everything except interventions
+
+.rs.restartR()
+rm(list=setdiff(ls()))
+
+#read netwrok v3.13
+network <- st_read("D:/JIBE/02_DataOutput/network/gm/network_v3.13.gpkg") #file found in Teams WP2>Data_WP2>Processed_Data>Greater Manchester>GM_Network
+
+interventions <- interventions[!duplicated(interventions$edgeID),]
+interventions <- interventions[(interventions$edgeID %in% E(g1)$edgeID),] #keep only edgeIDs found in g1 (BAD cycling infra)
+
+#add PROTECTED cycling lanes to edges without cycling lanes
+network$cyclesm <- ifelse((network$edgeID %in% interventions$edgeID)==TRUE, as.character("protected"), network_copy$cyclesm)
+
+#write network with new interventions
+sf::write_sf(network,"D:/JIBE/02_DataOutput/network/gm/network_interventions.gpkg")
