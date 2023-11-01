@@ -160,7 +160,7 @@ euc <- euc[order(euc$dist),]
 euc <- euc[!duplicated(euc$dist),]
 
 ###########################
-#PART 4: Connect disconnected boundary nodes
+#PART 5: Connect disconnected boundary nodes
 #########################
 rm(i,paths_euc, inter_euc, interventions)
 
@@ -180,7 +180,7 @@ rm(list=setdiff(ls(), c("interventions", "g1"))) #clear everything except interv
 rm(list=setdiff(ls()))
 
 ###########################
-#PART 5: Add cycling interventions to the base network
+#PART 6: Add cycling interventions to the base network
 #########################
 #read netwrok v3.13
 network <- st_read("D:/JIBE/02_DataOutput/network/gm/network_v3.13.gpkg") #file found in Teams WP2>Data_WP2>Processed_Data>Greater Manchester>GM_Network
