@@ -68,7 +68,7 @@ network <- network %>% activate("nodes") %>% set_vertex_attr("nodeID", value = 1
 #the PageRank score is a composite measure of incoming links with highets cycling demand as per the Propensity to Cycle Tool (PCT) and cycling stress crossing a junction
 network <- network %>% activate("nodes") %>% mutate(pg_rnk = page_rank(network, algo = "prpack", V(network), directed = TRUE, weights = (network %>% activate("edges") %>% pull(weight_1)) + (network %>% activate("edges") %>% pull(weight_4)))$vector)
 
-network <- network %>% activate("nodes") %>% mutate(brut = igraph::constraint((network %>% activate("nodes")), weights = network %>% activate("edges") %>% pull(weight_1)))
+network <- network %>% activate("nodes") %>% mutate(burt = igraph::constraint((network %>% activate("nodes")), weights = network %>% activate("edges") %>% pull(weight_1)))
 
 network <- network %>% activate("nodes") %>% mutate(bc = centrality_betweenness(weights = network %>% activate("edges") %>% pull(weight), normalized = TRUE, directed = TRUE))
 
@@ -76,7 +76,7 @@ network <- network %>% activate("nodes") %>% mutate(eigen = eigen_centrality(net
 
 network <- network %>% activate("nodes") %>% mutate(ens = influenceR::ens(network))
 
-#NB. We have tested Page Rank score, Brut constraint and Burt's Effective Network Size as node weights and the best performing was the PageRank algorithm
+#NB. We have tested Page Rank score, Burt constraint and Burt's Effective Network Size as node weights and the best performing was the PageRank algorithm
 
 ####################
 #PART 3: Split the network (graph) into sub-graphs
@@ -87,7 +87,7 @@ network <- network %>% activate("nodes") %>% mutate(ens = influenceR::ens(networ
 g2 <- subgraph.edges(graph=network, eids=which(E(network)$weight_3==4 | E(network)$weight_3==3 | E(network)$weight_3==2 | E(network)$quitnss>=75), delete.vertices = TRUE) #NB. form and to get changed with sub-setting the graph, they correspond with feature IDs of the nodes rather than nodeIDs
 g1 <- subgraph.edges(graph=network, eids=which(E(network)$weight_3==1 & E(network)$quitnss<75), delete.vertices = TRUE)
 
-#decompose graphs to find disconnected parts (for now the code makes use only of the 20 largest disconnected subgraphs in g2; future work can extend to include most of the subgraphs)
+#decompose subgraphs to find disconnected parts (for now the code makes use only of the 20 largest disconnected subgraphs in g2; future work can extend to include most of the subgraphs)
 dc1 <- decompose(g1, mode = "weak") #Decompose a graph into components
 c1 <- components(g1) #get the components
 dc2 <- decompose(g2, mode = "weak") #Decompose a graph into components
